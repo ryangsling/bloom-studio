@@ -1,0 +1,55 @@
+I am starting a new software project. Here is a one-paragraph description of what I want to build:
+
+[I'm building a production website for "Bloom Studio," a demo/flagship salon website for my web agency (Incodet), showcasing an AI booking concierge for UK hair & beauty salons. This is phase 1 of a staged build, don't build beyond what's scoped below.
+
+CONTEXT FILES (all in this repo)
+- DESIGN.md: locked design tokens (colors, type scale, spacing, radius, shadows, motion) and component inventory. Treat every value in it as final, implement it, don't reinterpret or restyle it.
+- Bloom_Studio_dc.html: the source prototype markup DESIGN.md was extracted from, use it as a structural/behavioral reference alongside DESIGN.md, not instead of it.
+- image-slot.js: the pattern used for droppable image regions (hero photo, service card photos). Build a real image component around this pattern, not a static placeholder, image loading is a genuine requirement here, not decoration.
+
+SCOPE FOR THIS PHASE (do not build beyond this)
+1. Homepage: header/nav, hero with two CTAs, trust line ("book direct, no marketplace commission"), trust indicators row, services grid, availability strip, reviews carousel, find-us/hours, chat FAB, and the contextual chat preview sheet.
+2. AI concierge full chat screen, matching Screen 2 in the HTML: message thread, quick-reply chips, booking confirmation card, human-handoff form.
+
+Do not build: booking deposit flow, waitlist, owner dashboard, rebooking automation, or any desktop-specific layout. Mobile-only per DESIGN.md.
+
+TECH STACK
+Next.js (or your recommendation if you have a strong reason otherwise). Deployed target: bloom.incodet.com (DNS handled separately).
+
+DATA MODEL
+All salon-specific content (name, area, accent, services[], reviews[], hours[], phone, address) comes from a single config/JSON file per DESIGN.md's content model, not hardcoded in components, since this gets re-skinned for future client sites.
+
+AI CONCIERGE, FUNCTIONAL REQUIREMENTS (this is the part that matters most, don't freelance it)
+- Call OpenRouter, model openai/gpt-oss-120b:free as primary, with a fallback model in the chain for rate limits or model removal (free models rotate without notice).
+- The AI must NOT freely generate the booking outcome as text. Use tool/function calling: define a "capture_booking" tool with structured fields (name, phone, service, preferred_time). The model can only trigger a booking capture by filling this tool call, never by writing prose that claims a booking happened.
+- The scripted example conversation (the "Hi, do you do balayage?" exchange) should reference services[0] from the config dynamically, not be hardcoded to Balayage/Priya, so the demo stays coherent when re-skinned for a different type of salon (e.g. a barbershop shouldn't show a balayage demo).
+- System prompt scope: the AI only knows this salon's actual services, prices, and hours from the config. Anything outside that scope, or anything it's not confident about, triggers the hand-off message and shows the "Connect me to a real person" form, never invents an answer.
+- On a successful capture_booking call: send an email notification (free-tier provider, e.g. Resend or Brevo) to a configured owner email with the captured details, and fire a Telegram bot message to a configured chat ID as a secondary/demo notification channel. Don't build SMS/WhatsApp yet.
+- Add a basic rate limit (per session/IP) so the free OpenRouter tier degrades gracefully (a friendly "we're getting lots of interest, try again shortly" message) instead of visibly erroring if the daily free-tier cap is hit.
+
+WORKFLOW
+Give me a plan first (file structure, component breakdown mapped to DESIGN.md's component inventory, and how the image-slot pattern will be implemented) before writing code, so I can review and approve before you build.]
+
+---
+
+You will find two template files and one design files in this repo:
+- AGENTS.md (project root)
+- docs/PLAN.md
+- design/DESIGN.md
+
+Your first and only task right now is to rewrite both of these files to match my specific project. Do not write any code yet.
+
+For AGENTS.md:
+- Replace all placeholder sections with real, specific content for this project
+- Fill in business requirements, key features, MVP limitations, technical decisions, starting point, design system (get context from design/DESIGN.md), and any project-specific coding standards
+- Make reasonable technical choices (framework, database, packaging) that suit the project type and scale
+- Keep the coding standards section exactly as written — do not change it
+
+For docs/PLAN.md:
+- Replace all placeholders with a real, phase-by-phase implementation plan for this specific project
+- Part 1 must always be the planning hard gate (keep its structure exactly)
+- Add as many parts as needed to cover the full MVP build, each with: Tasks, Tests, and Success criteria
+- Make the plan granular enough that any engineer could execute it phase-by-phase without ambiguity
+- Wherever a part requires a manual human action (account creation, API key setup, external dashboard config, deployment, etc.), insert a PAUSE block immediately before or after that part — list every manual step with exact URLs and file paths, then instruct the developer to confirm before the agent continues; do NOT attempt to automate or skip these steps
+
+When done, present both updated files in full and wait for my explicit approval before writing any code.
