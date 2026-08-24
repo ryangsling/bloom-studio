@@ -3,10 +3,11 @@
 ## Goal and approach
 
 Build a production, config-driven demo salon website with an AI booking concierge:
-1. A mobile-only Next.js homepage (hero, services, availability, reviews, hours, chat entry points) matching DESIGN.md exactly
+1. A mobile-first Next.js homepage (hero, services, availability, reviews, hours, chat entry points) matching DESIGN.md exactly
 2. A full AI concierge chat screen backed by OpenRouter, using tool-calling for booking capture and hand-off — never free-text claims
 3. Email + Telegram notifications fired on a successful booking capture
 4. A single salon config file so the whole site can be re-skinned for future clients
+5. A desktop-optimized layout added once the mobile MVP works end-to-end (Parts 9–10) — most bookings are expected from a smartphone, so mobile ships first
 
 Execution will proceed in gated phases. Part 1 is a hard gate: no implementation beyond planning until plan approval.
 
@@ -18,8 +19,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** None
-- **Pending:** Parts 1 through 8
+- **Completed:** Parts 1–3 (planning, scaffolding, design system primitives)
+- **Pending:** Parts 4 through 10
 
 ## Confirmed design decisions
 
@@ -27,6 +28,7 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 - Rate limiting is an in-memory, single-instance counter (session cookie + IP) for phase 1, not an external Redis-backed store — documented tradeoff in AGENTS.md Limitations.
 - Chat is route-based for the full screen (`/chat`) and a separate overlay component for the homepage preview sheet — these are two distinct components per DESIGN.md's interaction notes, not one component at two sizes.
 - The scripted opening exchange in the full chat is generated from `config.services[0]` at render time, never hardcoded to Balayage/Priya, so the demo stays coherent when re-skinned.
+- Desktop (Parts 9–10) adds exactly one breakpoint (`lg:`/1024px, no tablet tier), drops the mobile "phone frame" metaphor for a standard full-width layout, and gives the AI concierge a persistent bottom-right widget on desktop instead of the mobile full-page `/chat` takeover — full rationale in `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-design.md`.
 
 ## Part 1 - Planning and project baseline (hard gate)
 
@@ -248,6 +250,56 @@ The developer must:
 2. Check the Telegram chat for `TELEGRAM_CHAT_ID` for the bot message sent during the same test booking
 
 Confirm to the agent: "Email and Telegram notifications both arrived — end-to-end loop confirmed"
+
+## Part 9 - Desktop homepage layout
+
+**Status:** Pending
+
+Design rationale: `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-design.md`. One added breakpoint (Tailwind `lg:`, 1024px), no tablet tier. Extends the existing Part 4 components with `lg:` variants — no parallel desktop-only components.
+
+### Tasks
+
+- [ ] `Header`: add an `lg:` inline nav (menu links, phone, Book Now), hide the hamburger/full-screen overlay at `lg:` and up
+- [ ] `Hero`: add an `lg:` two-column layout (copy + CTAs beside the hero `ImageSlot`), replacing the mobile stacked order
+- [ ] `ServicesGrid`: `lg:` 4-column grid (all 4 services in one row)
+- [ ] `AvailabilityStrip`: widen within the `lg:` 1200px container, same content
+- [ ] `ReviewsCarousel`: `lg:` static 3-column grid, remove scroll-snap behavior at that breakpoint
+- [ ] `FindUs`: `lg:` two-column layout (map beside address/hours)
+- [ ] Footer: widen within the `lg:` container, same content
+- [ ] Add the shared `lg:` 1200px centered container with responsive horizontal padding, used by every section above
+
+### Tests
+
+- [ ] Manual check at 1280px and 1440px viewports against the Desktop layout table in `design/DESIGN.md`
+- [ ] Manual check at 1023px confirms the mobile layout is unaffected (breakpoint boundary)
+- [ ] `npm run build` and `npm run lint` both pass
+
+### Success criteria
+
+- [ ] Every homepage section reflows correctly at `lg:` with no layout breakage between 1024px and common desktop widths (1280–1920px)
+- [ ] No mobile behavior regressed below 1024px
+
+## Part 10 - Desktop AI concierge widget
+
+**Status:** Pending
+
+### Tasks
+
+- [ ] `DesktopChatWidget` component: fixed bottom-right panel (~400px wide, ~600px tall), rendered only at `lg:` and up
+- [ ] `ChatFAB` click behavior branches by viewport: below `lg:` unchanged (mobile preview sheet / `/chat`); at `lg:` and up, toggles `DesktopChatWidget` open/closed in place
+- [ ] Reuse Part 6's `ChatThread`, `MessageBubble`, `QuickReplyChips`, `BookingConfirmationCard`, and `HandoffForm` inside the widget — remove any full-viewport-only sizing assumption (e.g. `100vh`) from those components so they drop into the fixed panel cleanly
+- [ ] `/chat` route remains as a plain fallback page, unchanged
+
+### Tests
+
+- [ ] Manual E2E at a desktop viewport: open the widget, run the scripted opener, pick a quick-reply slot, confirm `BookingConfirmationCard` renders correctly inside the fixed panel
+- [ ] Manual E2E: confirm the widget calls the same `/api/chat` route as `/chat` (no backend duplication)
+- [ ] Manual check: `/chat` still loads correctly as a standalone page on both mobile and desktop viewports
+
+### Success criteria
+
+- [ ] The full mobile booking loop (chat → `capture_booking` → email/Telegram notifications) also completes correctly through the desktop widget
+- [ ] Opening/closing the widget never navigates away from the homepage
 
 ### PAUSE Block Format
 copy-paste this pattern whenever a part needs a manual step:
