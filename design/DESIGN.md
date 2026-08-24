@@ -3,7 +3,7 @@ name: bloom-studio-design-system
 version: 1.0.0
 source: Bloom_Studio_dc.html (Claude Design prototype, 2 screens)
 status: locked
-scope: mobile-only (no desktop layout required)
+scope: mobile-first, with a desktop-optimized layout at the lg breakpoint (see "Desktop layout" section)
 
 color:
   background_page: "#E8E1D6"
@@ -75,8 +75,11 @@ layout:
   frame_width: "430px, max-width 100%"
   chat_screen_height: "820px fixed"
   chat_sheet_height: "78% of frame, slides up from bottom"
-  viewport_target: "mobile only, no desktop breakpoint required"
-  grid_services: "2-column grid, 12px gap"
+  viewport_target: "mobile-first; desktop-optimized layout added at the lg breakpoint"
+  grid_services: "2-column grid, 12px gap (mobile); 4-column at lg"
+  desktop_breakpoint: "1024px (Tailwind lg:) — single added tier, no tablet-specific breakpoint"
+  desktop_container_max_width: "1200px, centered, responsive horizontal padding"
+  desktop_chat_widget: "fixed bottom-right panel, ~400px wide, ~600px tall, overlays the page in place"
 
 motion:
   pulse_ring: "scale 1→2, opacity .55→0, 2-2.4s ease-out infinite — used on availability dot and chat FAB"
@@ -97,9 +100,24 @@ Nothing beyond these two is specified here. Booking deposit flow, waitlist, owne
 
 ## Layout & structure
 
-- Single mobile card frame, 430px wide (max-width 100%), rounded 20px, floated on a warm neutral page background (`#E8E1D6`) with generous 56/16px page padding. The frame itself is the "phone screen."
-- No desktop layout is specified or required. Don't design breakpoints beyond preventing the frame from breaking on a wider viewport (centered, max-width constrained is sufficient).
-- Vertical rhythm inside the frame is section-based: each content block (hero, services, availability, reviews, find-us) has its own padding block rather than a shared container gutter, keep this per-section padding pattern rather than converting to a single global gutter.
+- Below the `lg` breakpoint (1024px): single mobile card frame, 430px wide (max-width 100%), rounded 20px, floated on a warm neutral page background (`#E8E1D6`) with generous 56/16px page padding. The frame itself is the "phone screen."
+- At `lg` and up: see "Desktop layout" below — the card-frame metaphor is dropped in favor of a standard full-width responsive layout in a 1200px container, using the same tokens.
+- Vertical rhythm inside the mobile frame is section-based: each content block (hero, services, availability, reviews, find-us) has its own padding block rather than a shared container gutter, keep this per-section padding pattern rather than converting to a single global gutter.
+
+## Desktop layout (≥1024px, Tailwind `lg:`)
+
+Added scope, design captured in `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-design.md`. One additional breakpoint only — no tablet-specific tier, mobile layout applies unchanged below it. Every section below extends its existing mobile component with `lg:` variants; no parallel desktop-only components.
+
+| Section | Mobile (unchanged) | Desktop (`lg:`) |
+|---|---|---|
+| Header | Salon name + hamburger → full-screen nav overlay | Salon name + inline nav links + phone + Book Now, no hamburger |
+| Hero | Image stacked above H1/copy/CTAs | Two columns: copy + CTAs beside the hero `ImageSlot` |
+| Services | 2-column grid | 4-column grid (all 4 services in one row) |
+| Availability strip | Full-width tinted bar | Same content, wider bar within the 1200px container |
+| Reviews | Horizontal scroll-snap carousel | Static 3-column grid, no scrolling |
+| Find us | Map placeholder stacked above address/hours | Two columns: map beside address/hours |
+| Footer | Small centered text line | Same content, wider |
+| Chat | `ChatFAB` → slide-up preview sheet → `/chat` full-page route | `ChatFAB` → persistent fixed bottom-right panel (~400×600px) overlaying the page in place, rendering the same chat UI as `/chat` (kept as a fallback route) |
 
 ## Component inventory
 
@@ -142,7 +160,7 @@ Every piece of salon-specific content is already externalized as named fields (s
 
 ## Explicit non-goals for this design system
 
-- No desktop/tablet layout
+- No tablet-specific breakpoint (mobile layout persists until the `lg` desktop breakpoint)
 - No dark mode
 - No component states beyond what's listed above (no loading skeletons, no error states specified, define these during build using the existing color/motion tokens, don't invent new ones)
 - No real photography specified, all image regions are explicit placeholders pending real assets
