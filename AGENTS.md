@@ -22,7 +22,7 @@ Phase 1 only. Not building: booking deposit flow, waitlist, owner dashboard, reb
 - Fonts: `next/font/google` — Newsreader (display) + Karla (body/UI)
 - Packaging / deployment: Vercel, target domain `bloom.incodet.com` (DNS handled separately)
 - Package manager: npm
-- AI integration: OpenRouter Chat Completions API, primary model `openai/gpt-oss-120b:free` with a configurable fallback model chain (env-driven, since free models rotate without notice); OpenAI-compatible tool/function calling for `capture_booking` and `request_handoff`
+- AI integration: OpenRouter Chat Completions API, primary/fallback models set via `OPENROUTER_MODEL_PRIMARY`/`OPENROUTER_MODEL_FALLBACK` (currently `nvidia/nemotron-3-super-120b-a12b:free` / `z-ai/glm-5.2:free` — verified against OpenRouter's live endpoints API, not just its model list, since a `:free` model can still be listed with zero active provider endpoints; free models rotate without notice, so re-verify before swapping either one); OpenAI-compatible tool/function calling for `capture_booking` and `request_handoff`
 - Email notifications: Resend (free tier)
 - Secondary notification: Telegram Bot API (plain `fetch`, no SDK)
 - Rate limiting: in-memory counter keyed by session cookie + IP (see Limitations)
