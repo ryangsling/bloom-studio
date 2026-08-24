@@ -19,8 +19,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** Parts 1–4 (planning, scaffolding, design system primitives, homepage)
-- **Pending:** Parts 5 through 10
+- **Completed:** Parts 1–7 (planning, scaffolding, design system primitives, homepage, AI concierge backend + frontend, Vercel deployment — live at https://bloom.incodet.com)
+- **Pending:** Part 8, plus Parts 9–10 (desktop layout, after the mobile MVP)
 
 ## Confirmed design decisions
 
@@ -204,23 +204,23 @@ Confirm to the agent: "Vercel is linked and environment variables are set"
 
 ## Part 7 - Vercel deployment
 
-**Status:** Pending
+**Status:** Done
 
 ### Tasks
 
-- [ ] Deploy with `vercel --prod` from the repo root
-- [ ] Verify the production build succeeds and note the assigned `*.vercel.app` URL
-- [ ] Add `bloom.incodet.com` under Settings → Domains in the Vercel project (actual DNS records at the domain's registrar/DNS provider are configured separately, outside this project's scope)
+- [x] Deploy with `vercel --prod` from the repo root
+- [x] Verify the production build succeeds and note the assigned `*.vercel.app` URL — https://bloom-studio-three.vercel.app
+- [x] Add `bloom.incodet.com` under Settings → Domains in the Vercel project. `incodet.com`'s DNS is already on Cloudflare (a separate Vercel account hosts the root domain), so this needed the Cloudflare MCP: added a `_vercel.incodet.com` TXT record to prove control of the subdomain independent of the root domain's Vercel account, then a `bloom.incodet.com` CNAME to Vercel's recommended target once verified — both added directly via the Cloudflare API, nothing else on the zone touched.
 
 ### Tests
 
-- [ ] Homepage and `/chat` both load correctly on the deployed URL
-- [ ] `/api/chat` responds correctly against the production environment variables
+- [x] Homepage and `/chat` both load correctly on the deployed URL
+- [x] `/api/chat` responds correctly against the production environment variables
 
 ### Success criteria
 
-- [ ] Production deployment is live and reachable at the Vercel-assigned URL
-- [ ] `bloom.incodet.com` is registered as a domain on the Vercel project, pending external DNS configuration
+- [x] Production deployment is live and reachable at the Vercel-assigned URL
+- [x] `bloom.incodet.com` resolves over HTTPS to the production deployment (homepage, `/chat`, `/api/chat` all verified)
 
 ## Part 8 - End-to-end verification
 
