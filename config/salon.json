@@ -7,6 +7,10 @@
   "phone": "0121 555 0192",
   "addressLine1": "42 Vyse Street, Jewellery Quarter",
   "postcode": "B18 6LG",
+  "logo": {
+    "src": "/logo-icon.png",
+    "alt": "Bloom Studio logo"
+  },
   "heroImage": {
     "src": "https://images.unsplash.com/photo-1695527081848-1e46c06e6458?q=80&w=2400&auto=format&fit=crop",
     "alt": "Stylist blow-drying a client's hair in a bright, modern salon",

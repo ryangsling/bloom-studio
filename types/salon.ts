@@ -39,6 +39,7 @@ export interface Salon {
   phone: string;
   addressLine1: string;
   postcode: string;
+  logo: { src: string; alt: string };
   heroImage: ImageAsset;
   services: Service[];
   reviews: Review[];
