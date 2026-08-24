@@ -72,6 +72,39 @@ describe("POST /api/chat", () => {
     expect(sendBookingTelegramMock).toHaveBeenCalledTimes(1);
   });
 
+  it("does not fire notifications or render a booking when capture_booking args are missing fields", async () => {
+    callOpenRouterMock.mockResolvedValue({
+      content: null,
+      model: "test/model",
+      toolCalls: [
+        {
+          id: "call_bad",
+          type: "function",
+          function: {
+            name: "capture_booking",
+            arguments: JSON.stringify({
+              name: "Chloe",
+              phone: "07000 000000",
+              // service and preferred_time missing — malformed tool call
+            }),
+          },
+        },
+      ],
+    });
+
+    const { POST } = await import("./route");
+    const res = await POST(
+      makeRequest({ messages: [{ role: "user", content: "book it" }] }, { cookie: crypto.randomUUID() }),
+    );
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json.toolCall).toBeNull();
+    expect(typeof json.content).toBe("string");
+    expect(sendBookingEmailMock).not.toHaveBeenCalled();
+    expect(sendBookingTelegramMock).not.toHaveBeenCalled();
+  });
+
   it("returns a hand-off flag without firing notifications on a request_handoff tool call", async () => {
     callOpenRouterMock.mockResolvedValue({
       content: "Let me get a stylist to help with that.",

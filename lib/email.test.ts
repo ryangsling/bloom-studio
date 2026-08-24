@@ -43,3 +43,27 @@ describe("sendBookingEmail", () => {
     expect(sendMock).not.toHaveBeenCalled();
   });
 });
+
+describe("sendCallbackRequestEmail", () => {
+  const callback = { name: "Sam Rivera", phone: "07999 111222" };
+
+  it("sends an email to the owner with the callback request details", async () => {
+    const { sendCallbackRequestEmail } = await import("./email");
+    await sendCallbackRequestEmail(callback);
+
+    expect(sendMock).toHaveBeenCalledTimes(1);
+    const payload = sendMock.mock.calls[0][0];
+    expect(payload.to).toBe("owner@example.com");
+    expect(payload.from).toBe("onboarding@resend.dev");
+    expect(payload.text).toContain("Sam Rivera");
+    expect(payload.text).toContain("07999 111222");
+  });
+
+  it("does nothing when RESEND_API_KEY is not configured", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+    const { sendCallbackRequestEmail } = await import("./email");
+    await sendCallbackRequestEmail(callback);
+
+    expect(sendMock).not.toHaveBeenCalled();
+  });
+});

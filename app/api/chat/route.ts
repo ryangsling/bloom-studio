@@ -6,31 +6,38 @@ import { callOpenRouter, type ChatMessage } from "@/lib/openrouter";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { sendBookingEmail } from "@/lib/email";
 import { sendBookingTelegram } from "@/lib/telegram";
+import { getOrCreateSessionId, withSessionCookie } from "@/lib/session";
+import type { BookingDetails } from "@/lib/booking";
 
-const SESSION_COOKIE = "bloom_session";
 const FRIENDLY_UNAVAILABLE_MESSAGE =
   "We're getting lots of interest right now — please try again shortly.";
+const INCOMPLETE_BOOKING_MESSAGE =
+  "Sorry, I didn't catch all of your booking details — could you share your name, phone number, service, and preferred time again?";
 
 interface IncomingMessage {
   role: "user" | "assistant";
   content: string;
 }
 
-function withSessionCookie(res: NextResponse, sessionId: string, isNew: boolean) {
-  if (isNew) {
-    res.cookies.set(SESSION_COOKIE, sessionId, {
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24,
-    });
+function parseBookingArgs(args: Record<string, unknown>): BookingDetails | null {
+  const { name, phone, service, preferred_time: preferredTime } = args;
+  if (
+    typeof name !== "string" ||
+    !name.trim() ||
+    typeof phone !== "string" ||
+    !phone.trim() ||
+    typeof service !== "string" ||
+    !service.trim() ||
+    typeof preferredTime !== "string" ||
+    !preferredTime.trim()
+  ) {
+    return null;
   }
-  return res;
+  return { name, phone, service, preferredTime };
 }
 
 export async function POST(request: NextRequest) {
-  const existingSessionId = request.cookies.get(SESSION_COOKIE)?.value;
-  const sessionId = existingSessionId ?? crypto.randomUUID();
-  const isNewSession = !existingSessionId;
+  const { sessionId, isNew: isNewSession } = getOrCreateSessionId(request);
 
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const { limited } = checkRateLimit(`${sessionId}:${ip}`);
@@ -76,20 +83,19 @@ export async function POST(request: NextRequest) {
   } = { content: result.content, toolCall: null };
 
   if (toolCall?.function.name === "capture_booking") {
-    const args = JSON.parse(toolCall.function.arguments);
-    const booking = {
-      name: args.name,
-      phone: args.phone,
-      service: args.service,
-      preferredTime: args.preferred_time,
-    };
-    await Promise.allSettled([sendBookingEmail(booking), sendBookingTelegram(booking)]);
-    payload = { content: result.content, toolCall: { name: "capture_booking", booking } };
+    const booking = parseBookingArgs(JSON.parse(toolCall.function.arguments));
+    if (booking) {
+      await Promise.allSettled([sendBookingEmail(booking), sendBookingTelegram(booking)]);
+      payload = { content: result.content, toolCall: { name: "capture_booking", booking } };
+    } else {
+      console.error("capture_booking tool call had incomplete arguments — dropping it");
+      payload = { content: result.content ?? INCOMPLETE_BOOKING_MESSAGE, toolCall: null };
+    }
   } else if (toolCall?.function.name === "request_handoff") {
     const args = JSON.parse(toolCall.function.arguments);
     payload = {
       content: result.content,
-      toolCall: { name: "request_handoff", reason: args.reason },
+      toolCall: { name: "request_handoff", reason: args.reason || "unspecified" },
     };
   }
 
