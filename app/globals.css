@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Design tokens — mirrors design/DESIGN.md exactly. Treat as locked; don't
+   restyle here, only implement. No dark mode: explicit DESIGN.md non-goal. */
+@theme {
+  --color-bg-page: #e8e1d6;
+  --color-bg-surface: #fbf6f1;
+  --color-bg-surface-alt: #f4e9e2;
+  --color-bg-image-placeholder: #ece1d6;
+  --color-bg-image-placeholder-alt: #e6d9cc;
+
+  --color-text-primary: #2b2622;
+  --color-text-secondary: #6b6157;
+  --color-text-muted: #8a7f72;
+  --color-text-faint: #948a7c;
+  --color-text-placeholder: #a9997f;
+
+  --color-border-hairline: rgba(43, 38, 34, 0.08);
+  --color-border-hairline-light: rgba(43, 38, 34, 0.06);
+  --color-border-input: rgba(43, 38, 34, 0.15);
+  --color-border-input-focus-ring: rgba(43, 38, 34, 0.1);
+
+  --color-accent-default: #c1592e;
+  --color-accent-on-color: #fffdfb;
+  --color-secondary-button-bg: #f3e6c6;
+  --color-secondary-button-text: #5b4a1e;
+  --color-secondary-button-border: #c79a3e;
+  --color-status-online: #6e8b5c;
+  --color-overlay-scrim: rgba(43, 38, 34, 0.4);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-card: 14px;
+  --radius-panel: 20px;
+  --radius-pill: 9999px;
+
+  --shadow-card-elevation: 0 24px 60px -24px rgba(43, 38, 34, 0.4), 0 1px 0 rgba(43, 38, 34, 0.06);
+  --shadow-chat-fab: 0 10px 24px -8px rgba(43, 38, 34, 0.5);
+  --shadow-chat-panel: 0 -12px 30px -12px rgba(43, 38, 34, 0.3);
+}
+
+/* Font variables come from next/font (set on <html> in app/layout.tsx), so
+   they need "inline" resolution rather than a static @theme value. */
+@theme inline {
+  --font-display: var(--font-newsreader);
+  --font-body: var(--font-karla);
+}
+
+/*
+ * DESIGN.md's spacing scale (4/6/8/10/12/14/16/18/20/22/26/28/36/56/64px) is
+ * a fixed list, not a multiplier scale, so components use Tailwind arbitrary
+ * values against it directly (e.g. p-[22px], gap-[12px]) rather than a named
+ * spacing token set.
+ *
+ * accent is per-salon (config/salon.json), not a fixed design token — the
+ * root layout sets --accent as an inline custom property from config, and
+ * components reference it via arbitrary values, e.g. bg-[var(--accent)].
+ * --color-accent-default above is only the DESIGN.md fallback.
+ */
+:root {
+  --accent: var(--color-accent-default);
+}
+
+/* Motion keyframes (pulse-ring, typing-dot, slide-up) are added in Part 3
+   alongside the shared UI primitives that use them. */
+
+body {
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
