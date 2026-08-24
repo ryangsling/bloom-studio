@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Button from "@/components/Button";
 import type { Salon } from "@/types/salon";
 
@@ -14,13 +15,24 @@ export interface HeaderProps {
   onToggleMenu: () => void;
 }
 
+function SalonBrand({ salon, fontSize }: { salon: Salon; fontSize: string }) {
+  return (
+    <div className="flex items-center gap-[8px]">
+      <Image src={salon.logo.src} alt={salon.logo.alt} width={26} height={26} />
+      <div
+        className={`font-[family-name:var(--font-display)] leading-none font-medium italic ${fontSize}`}
+      >
+        {salon.salonName}
+      </div>
+    </div>
+  );
+}
+
 export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
   return (
     <>
       <div className="flex items-center justify-between px-[22px] pt-[20px] pb-[16px]">
-        <div className="font-[family-name:var(--font-display)] text-[22px] leading-none font-medium italic">
-          {salon.salonName}
-        </div>
+        <SalonBrand salon={salon} fontSize="text-[22px]" />
         <button
           onClick={onToggleMenu}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -34,9 +46,7 @@ export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
       {menuOpen ? (
         <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-[var(--color-bg-surface)] px-[22px] py-[20px]">
           <div className="mb-[36px] flex items-center justify-between">
-            <div className="font-[family-name:var(--font-display)] text-[22px] italic">
-              {salon.salonName}
-            </div>
+            <SalonBrand salon={salon} fontSize="text-[22px]" />
             <button
               onClick={onToggleMenu}
               aria-label="Close menu"

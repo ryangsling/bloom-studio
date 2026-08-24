@@ -14,6 +14,7 @@ function makeSalon(overrides: Partial<Salon> = {}): Salon {
     phone: "000",
     addressLine1: "1 Test St",
     postcode: "T1 1TT",
+    logo: { src: "", alt: "" },
     heroImage: BLANK_IMAGE,
     services: [{ name: "Balayage", price: "£150", duration: "2hr", image: BLANK_IMAGE }],
     reviews: [],
