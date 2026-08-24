@@ -8,10 +8,10 @@
   "addressLine1": "42 Vyse Street, Jewellery Quarter",
   "postcode": "B18 6LG",
   "heroImage": {
-    "src": "https://images.unsplash.com/photo-1781450090585-1a511b7066d9?q=80&w=2400&auto=format&fit=crop",
-    "alt": "Bright, modern salon interior with styling chairs and mirrors",
-    "credit": "Photo by Barney Goodman on Unsplash",
-    "creditHref": "https://unsplash.com/@bgoodpic"
+    "src": "https://images.unsplash.com/photo-1695527081848-1e46c06e6458?q=80&w=2400&auto=format&fit=crop",
+    "alt": "Stylist blow-drying a client's hair in a bright, modern salon",
+    "credit": "Photo by Daniel on Unsplash",
+    "creditHref": "https://unsplash.com/@unsplashbydan"
   },
   "services": [
     {
@@ -41,10 +41,10 @@
       "price": "£40",
       "duration": "45min",
       "image": {
-        "src": "https://images.unsplash.com/photo-1571290274554-6a2eaa771e5f?q=80&w=1200&auto=format&fit=crop",
-        "alt": "Close-up of a finished gel manicure",
-        "credit": "Photo by Budka Damdinsuren on Unsplash",
-        "creditHref": "https://unsplash.com/@buudkaanaa"
+        "src": "https://images.unsplash.com/photo-1610992015762-45dca7fa3a85?q=80&w=1200&auto=format&fit=crop",
+        "alt": "Close-up of a hand with a solid nude gel manicure",
+        "credit": "Photo by Chelson Tamares on Unsplash",
+        "creditHref": "https://unsplash.com/@jd_chon"
       }
     },
     {
