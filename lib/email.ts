@@ -20,6 +20,8 @@ export async function sendBookingEmail(details: BookingDetails): Promise<void> {
   });
 
   if (error) {
-    console.error("Failed to send booking email", error);
+    console.error(
+      `Failed to send booking email: name=${error.name} statusCode=${error.statusCode} message=${error.message}`,
+    );
   }
 }
