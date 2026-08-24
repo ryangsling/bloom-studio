@@ -19,8 +19,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** Parts 1–3 (planning, scaffolding, design system primitives)
-- **Pending:** Parts 4 through 10
+- **Completed:** Parts 1–4 (planning, scaffolding, design system primitives, homepage)
+- **Pending:** Parts 5 through 10
 
 ## Confirmed design decisions
 
@@ -127,7 +127,7 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 The developer must:
 1. Create an OpenRouter account at https://openrouter.ai and generate an API key at https://openrouter.ai/keys — use it for `OPENROUTER_API_KEY`
-2. Create a Resend account at https://resend.com and generate an API key at https://resend.com/api-keys — use it for `RESEND_API_KEY`; for the phase-1 demo, the default `onboarding@resend.dev` sender identity works without domain verification unless a `bloom.incodet.com` sending domain is already verified in Resend
+2. Create a Resend account at https://resend.com and generate an API key at https://resend.com/api-keys — use it for `RESEND_API_KEY`; for the phase-1 demo, the default `onboarding@resend.dev` sender identity works without domain verification, **but Resend's sandbox restricts recipients to the account's own signup email only** — set `OWNER_EMAIL` to that address for now, or verify a real sending domain at https://resend.com/domains (and set `EMAIL_FROM` to an address on it) to send to any recipient
 3. Create a Telegram bot via BotFather (https://t.me/BotFather) using `/newbot`, and copy the bot token for `TELEGRAM_BOT_TOKEN`
 4. Get the target Telegram chat id: send the new bot one message, then open `https://api.telegram.org/bot<token>/getUpdates` in a browser and read the `chat.id` field from the response — use it for `TELEGRAM_CHAT_ID`
 5. Create a Vercel account at https://vercel.com if one doesn't already exist (needed for Part 7)
