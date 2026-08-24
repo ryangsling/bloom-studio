@@ -19,7 +19,7 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** Parts 1–8 — the full mobile MVP (planning, scaffolding, design system, homepage, AI concierge backend + frontend, Vercel deployment live at https://bloom.incodet.com, end-to-end verification) — pending only the PAUSE 3 notification-delivery confirmation
+- **Completed:** Parts 1–8 — the full mobile MVP (planning, scaffolding, design system, homepage, AI concierge backend + frontend, Vercel deployment live at https://bloom.incodet.com, end-to-end verification, PAUSE 3 notification delivery confirmed by user)
 - **Pending:** Parts 9–10 (desktop layout)
 
 ## Confirmed design decisions
@@ -224,7 +224,7 @@ Confirm to the agent: "Vercel is linked and environment variables are set"
 
 ## Part 8 - End-to-end verification
 
-**Status:** Done (pending PAUSE 3 notification-delivery confirmation)
+**Status:** Done
 
 ### Tasks
 
@@ -250,6 +250,8 @@ The developer must:
 2. Check the Telegram chat for `TELEGRAM_CHAT_ID` for the bot message sent during the same test booking
 
 Confirm to the agent: "Email and Telegram notifications both arrived — end-to-end loop confirmed"
+
+**Confirmed by user 2026-08-24**: both the booking email (to `jamesahsan1371@gmail.com`) and the Telegram message arrived correctly for the "Part8 Verification" test booking. The mobile MVP (Parts 1–8) is fully verified end-to-end on production.
 
 ## Part 9 - Desktop homepage layout
 
