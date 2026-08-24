@@ -1,35 +1,40 @@
-import Image from "next/image";
-import salon from "@/config/salon.json";
+"use client";
 
-// Scaffolding checkpoint for Part 2 (project setup + config data model).
-// The real homepage (header, hero, services grid, reviews, etc. per
-// design/DESIGN.md) is built in Part 4 — this page only proves the config,
-// theme tokens, fonts, and the Unsplash remote image pipeline are wired up.
+import { useState } from "react";
+import salon from "@/config/salon.json";
+import Header from "@/components/home/Header";
+import Hero from "@/components/home/Hero";
+import TrustLine from "@/components/home/TrustLine";
+import TrustIndicators from "@/components/home/TrustIndicators";
+import ServicesGrid from "@/components/home/ServicesGrid";
+import AvailabilityStrip from "@/components/home/AvailabilityStrip";
+import ReviewsCarousel from "@/components/home/ReviewsCarousel";
+import FindUs from "@/components/home/FindUs";
+import ChatFAB from "@/components/home/ChatFAB";
+import ChatPreviewSheet from "@/components/home/ChatPreviewSheet";
+
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+
   return (
-    <main className="mx-auto flex max-w-[430px] flex-col gap-[16px] p-[22px]">
-      <h1 className="font-[family-name:var(--font-display)] text-[32px] italic font-medium leading-[1.15] text-[var(--color-text-primary)]">
-        {salon.salonName}
-      </h1>
-      <p className="text-[15px] leading-[1.6] text-[var(--color-text-secondary)]">
-        {salon.area} &middot; {salon.established} &middot; {salon.rating}
-      </p>
-      <div className="relative h-[220px] overflow-hidden rounded-[var(--radius-card)] bg-[var(--color-bg-image-placeholder)]">
-        <Image
-          src={salon.heroImage.src}
-          alt={salon.heroImage.alt}
-          fill
-          className="object-cover"
-          priority
-        />
+    <div className="flex min-h-screen flex-col items-center gap-[64px] px-[16px] py-[56px]">
+      <div className="relative w-[430px] max-w-full overflow-hidden rounded-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card-elevation)]">
+        <Header salon={salon} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} />
+        <Hero salon={salon} onOpenChat={() => setChatOpen(true)} />
+        <TrustLine />
+        <TrustIndicators salon={salon} />
+        <ServicesGrid salon={salon} />
+        <AvailabilityStrip salon={salon} />
+        <ReviewsCarousel salon={salon} />
+        <FindUs salon={salon} />
+        <footer className="border-t border-[var(--color-border-hairline)] px-[22px] py-[22px] text-[12px] text-[var(--color-text-faint)]">
+          {salon.salonName} · {salon.area}
+        </footer>
+
+        <ChatFAB onClick={() => setChatOpen((v) => !v)} />
+        <ChatPreviewSheet salon={salon} open={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
-      <p className="text-[12px] text-[var(--color-text-faint)]">
-        {salon.heroImage.credit}
-      </p>
-      <p className="text-[13px] text-[var(--color-text-muted)]">
-        Part 2 scaffolding complete — {salon.services.length} services loaded
-        from config/salon.json. Homepage build is Part 4.
-      </p>
-    </main>
+    </div>
   );
 }
