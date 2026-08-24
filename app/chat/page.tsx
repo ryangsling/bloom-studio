@@ -83,11 +83,14 @@ export default function ChatPage() {
         return;
       }
 
-      const fallbackHandoffMessage =
-        "That's something to check with a stylist in person — let me connect you with one.";
+      const fallbackToolMessages: Record<string, string> = {
+        capture_booking:
+          "Thanks! I've sent your request through — the salon will text or call to confirm the time shortly.",
+        request_handoff:
+          "That's something to check with a stylist in person — let me connect you with one.",
+      };
       const botText =
-        data.content ||
-        (data.toolCall?.name === "request_handoff" ? fallbackHandoffMessage : null);
+        data.content || (data.toolCall?.name ? fallbackToolMessages[data.toolCall.name] : null);
 
       if (botText) {
         setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "bot", text: botText }]);
