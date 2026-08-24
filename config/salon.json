@@ -1,0 +1,91 @@
+{
+  "salonName": "Bloom Studio",
+  "area": "Birmingham",
+  "accent": "#C1592E",
+  "established": "Est. 2014",
+  "rating": "4.9 · 500+ Google reviews",
+  "phone": "0121 555 0192",
+  "addressLine1": "42 Vyse Street, Jewellery Quarter",
+  "postcode": "B18 6LG",
+  "heroImage": {
+    "src": "https://images.unsplash.com/photo-1781450090585-1a511b7066d9?q=80&w=2400&auto=format&fit=crop",
+    "alt": "Bright, modern salon interior with styling chairs and mirrors",
+    "credit": "Photo by Barney Goodman on Unsplash",
+    "creditHref": "https://unsplash.com/@bgoodpic"
+  },
+  "services": [
+    {
+      "name": "Balayage",
+      "price": "£150",
+      "duration": "2hr 30min",
+      "image": {
+        "src": "https://images.unsplash.com/photo-1605980766335-d3a41c7332a1?q=80&w=1200&auto=format&fit=crop",
+        "alt": "Woman with sun-kissed blonde balayage hair",
+        "credit": "Photo by Lera Kogan on Unsplash",
+        "creditHref": "https://unsplash.com/@newyork_creator"
+      }
+    },
+    {
+      "name": "Cut & Finish",
+      "price": "£65",
+      "duration": "45min",
+      "image": {
+        "src": "https://images.unsplash.com/photo-1700760934268-8aa0ef52ce0a?q=80&w=1200&auto=format&fit=crop",
+        "alt": "Stylist cutting a client's hair with scissors",
+        "credit": "Photo by Farhad Ibrahimzade on Unsplash",
+        "creditHref": "https://unsplash.com/@ferhadd"
+      }
+    },
+    {
+      "name": "Gel Manicure",
+      "price": "£40",
+      "duration": "45min",
+      "image": {
+        "src": "https://images.unsplash.com/photo-1571290274554-6a2eaa771e5f?q=80&w=1200&auto=format&fit=crop",
+        "alt": "Close-up of a finished gel manicure",
+        "credit": "Photo by Budka Damdinsuren on Unsplash",
+        "creditHref": "https://unsplash.com/@buudkaanaa"
+      }
+    },
+    {
+      "name": "Lash Lift & Tint",
+      "price": "£58",
+      "duration": "50min",
+      "image": {
+        "src": "https://images.unsplash.com/photo-1639629509821-c54cdd984227?q=80&w=1200&auto=format&fit=crop",
+        "alt": "Close-up of an eye with long, tinted lashes",
+        "credit": "Photo by Milky Way Lashes on Unsplash",
+        "creditHref": "https://unsplash.com/@milkywaylashes"
+      }
+    }
+  ],
+  "reviews": [
+    {
+      "quote": "Booked in two minutes at 11pm when I couldn't sleep thinking about my roots. Priya's balayage was perfect.",
+      "name": "Chloe M.",
+      "service": "Balayage"
+    },
+    {
+      "quote": "Only salon in Birmingham that answers after hours. I didn't even need to call.",
+      "name": "Aisha R.",
+      "service": "Gel Manicure"
+    },
+    {
+      "quote": "Been coming for three years. Feels like family, looks like a five-star spa.",
+      "name": "Grace T.",
+      "service": "Cut & Finish"
+    }
+  ],
+  "hours": [
+    { "day": "Monday", "time": "Closed" },
+    { "day": "Tue – Fri", "time": "9:00 – 19:00" },
+    { "day": "Saturday", "time": "9:00 – 17:00" },
+    { "day": "Sunday", "time": "10:00 – 15:00" }
+  ],
+  "chat": {
+    "stylist": "Priya",
+    "slot1": "Thu 2:00pm",
+    "slot2": "Thu 4:30pm",
+    "nextAvailable": "Today, 4:30pm"
+  }
+}
