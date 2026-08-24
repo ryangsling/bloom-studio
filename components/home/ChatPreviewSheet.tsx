@@ -1,19 +1,11 @@
 import { getScriptedMessages } from "@/lib/scriptedConversation";
+import { initialsOf } from "@/lib/initials";
 import type { Salon } from "@/types/salon";
 
 export interface ChatPreviewSheetProps {
   salon: Salon;
   open: boolean;
   onClose: () => void;
-}
-
-function initialsOf(name: string) {
-  return name
-    .split(/\s+/)
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 }
 
 export function ChatPreviewSheet({ salon, open, onClose }: ChatPreviewSheetProps) {
