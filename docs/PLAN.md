@@ -19,8 +19,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** Parts 1–3 (planning, scaffolding, design system primitives)
-- **Pending:** Parts 4 through 10
+- **Completed:** Parts 1–4 (planning, scaffolding, design system primitives, homepage)
+- **Pending:** Parts 5 through 10
 
 ## Confirmed design decisions
 
