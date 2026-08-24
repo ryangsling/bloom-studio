@@ -19,8 +19,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** Parts 1–4 (planning, scaffolding, design system primitives, homepage)
-- **Pending:** Parts 5 through 10
+- **Completed:** Parts 1–8 — the full mobile MVP (planning, scaffolding, design system, homepage, AI concierge backend + frontend, Vercel deployment live at https://bloom.incodet.com, end-to-end verification, PAUSE 3 notification delivery confirmed by user)
+- **Pending:** Parts 9–10 (desktop layout)
 
 ## Confirmed design decisions
 
@@ -224,24 +224,24 @@ Confirm to the agent: "Vercel is linked and environment variables are set"
 
 ## Part 8 - End-to-end verification
 
-**Status:** Pending
+**Status:** Done
 
 ### Tasks
 
-- [ ] Trigger a full test booking through the deployed chat: ask about `services[0]`, pick a quick-reply slot, let `capture_booking` fire
-- [ ] Confirm the `BookingConfirmationCard` appears with the correct details
-- [ ] Ask an allergy/patch-test question and confirm hand-off triggers correctly
-- [ ] Rapidly send messages to confirm the rate-limit degradation message appears
+- [x] Trigger a full test booking through the deployed chat: ask about `services[0]`, pick a quick-reply slot, let `capture_booking` fire — done against https://bloom.incodet.com (name "Part8 Verification", phone "07000 800008")
+- [x] Confirm the `BookingConfirmationCard` appears with the correct details — "Request received" / "Balayage with Priya" / "Thu 2:00pm · 42 Vyse Street, Jewellery Quarter, Birmingham"
+- [x] Ask an allergy/patch-test question and confirm hand-off triggers correctly — hand-off message shown, callback form auto-revealed, no safety advice given
+- [x] Rapidly send messages to confirm the rate-limit degradation message appears — both the real OpenRouter upstream 503 and our own 429 rate limiter returned the same friendly message, in the API response and rendered in the chat UI
 
 ### Tests
 
-- [ ] `npm run build`, `npm run lint`, and the full test suite all pass with no errors
-- [ ] No console errors during the manual test booking flow
+- [x] `npm run build`, `npm run lint`, and the full test suite (26 tests) all pass with no errors
+- [x] No console errors during the manual test booking flow (checked after every step)
 
 ### Success criteria
 
-- [ ] End-to-end booking loop confirmed: chat → `capture_booking` tool call → notifications fired
-- [ ] Every Phase 1 scope item from `AGENTS.md` is present and functioning on the production deployment
+- [x] End-to-end booking loop confirmed: chat → `capture_booking` tool call → notifications fired
+- [x] Every Phase 1 scope item from `AGENTS.md` is present and functioning on the production deployment
 
 ## PAUSE 3 - After Part 8 (Confirm notification delivery)
 
@@ -250,6 +250,8 @@ The developer must:
 2. Check the Telegram chat for `TELEGRAM_CHAT_ID` for the bot message sent during the same test booking
 
 Confirm to the agent: "Email and Telegram notifications both arrived — end-to-end loop confirmed"
+
+**Confirmed by user 2026-08-24**: both the booking email (to `jamesahsan1371@gmail.com`) and the Telegram message arrived correctly for the "Part8 Verification" test booking. The mobile MVP (Parts 1–8) is fully verified end-to-end on production.
 
 ## Part 9 - Desktop homepage layout
 
