@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import salon from "@/config/salon.json";
-import { initialsOf } from "@/lib/initials";
 import { getScriptedMessages } from "@/lib/scriptedConversation";
+import ChatThread from "@/components/chat/ChatThread";
 import MessageBubble from "@/components/chat/MessageBubble";
 import TypingIndicator from "@/components/chat/TypingIndicator";
 import QuickReplyChips from "@/components/chat/QuickReplyChips";
 import BookingConfirmationCard from "@/components/chat/BookingConfirmationCard";
-import HandoffSection from "@/components/chat/HandoffSection";
+import HandoffPrompt from "@/components/chat/HandoffPrompt";
+import HandoffForm from "@/components/chat/HandoffForm";
 import MessageInputBar from "@/components/chat/MessageInputBar";
 
 interface DisplayMessage {
@@ -25,6 +25,11 @@ interface BookingInfo {
 
 const FRIENDLY_ERROR_FALLBACK =
   "We're getting lots of interest right now — please try again shortly.";
+const CAPTURE_BOOKING_MESSAGE =
+  "Thanks! I've sent your request through — the salon will text or call to confirm the time shortly.";
+const HANDOFF_FALLBACK_MESSAGE =
+  "That's something to check with a stylist in person — let me connect you with one.";
+const HANDOFF_SUBMIT_ERROR = "Something went wrong sending that — please try again.";
 
 function seedMessages(): DisplayMessage[] {
   const scripted = getScriptedMessages(salon.services[0]).map((m, i) => ({
@@ -42,6 +47,13 @@ function seedMessages(): DisplayMessage[] {
   return [...scripted, availabilityOffer];
 }
 
+function appendBotMessage(text: string) {
+  return (prev: DisplayMessage[]): DisplayMessage[] => [
+    ...prev,
+    { id: crypto.randomUUID(), role: "bot", text },
+  ];
+}
+
 export default function ChatPage() {
   const [messages, setMessages] = useState<DisplayMessage[]>(seedMessages);
   const [showChips, setShowChips] = useState(true);
@@ -49,6 +61,8 @@ export default function ChatPage() {
   const [booking, setBooking] = useState<BookingInfo | null>(null);
   const [handoffOpen, setHandoffOpen] = useState(false);
   const [handoffSubmitted, setHandoffSubmitted] = useState(false);
+  const [handoffSubmitting, setHandoffSubmitting] = useState(false);
+  const [handoffError, setHandoffError] = useState<string | null>(null);
   const threadEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,6 +70,8 @@ export default function ChatPage() {
   }, [messages, isSending]);
 
   async function sendMessage(text: string) {
+    if (isSending) return;
+
     setShowChips(false);
     const userMessage: DisplayMessage = { id: crypto.randomUUID(), role: "user", text };
     const nextMessages = [...messages, userMessage];
@@ -76,65 +92,60 @@ export default function ChatPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMessages((prev) => [
-          ...prev,
-          { id: crypto.randomUUID(), role: "bot", text: data.message ?? FRIENDLY_ERROR_FALLBACK },
-        ]);
+        setMessages(appendBotMessage(data.message ?? FRIENDLY_ERROR_FALLBACK));
         return;
       }
 
-      const fallbackToolMessages: Record<string, string> = {
-        capture_booking:
-          "Thanks! I've sent your request through — the salon will text or call to confirm the time shortly.",
-        request_handoff:
-          "That's something to check with a stylist in person — let me connect you with one.",
-      };
-      const botText =
-        data.content || (data.toolCall?.name ? fallbackToolMessages[data.toolCall.name] : null);
-
-      if (botText) {
-        setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "bot", text: botText }]);
-      }
-
       if (data.toolCall?.name === "capture_booking") {
-        setBooking({
-          service: data.toolCall.booking.service,
-          preferredTime: data.toolCall.booking.preferredTime,
-        });
+        const captured = data.toolCall.booking;
+        if (captured?.service && captured?.preferredTime) {
+          // Never trust the model's own prose to describe the outcome here —
+          // always use our own fixed, accurate wording (see systemPrompt.ts
+          // and BookingConfirmationCard for the full rationale).
+          setMessages(appendBotMessage(CAPTURE_BOOKING_MESSAGE));
+          setBooking({ service: captured.service, preferredTime: captured.preferredTime });
+        } else if (data.content) {
+          setMessages(appendBotMessage(data.content));
+        }
       } else if (data.toolCall?.name === "request_handoff") {
+        setMessages(appendBotMessage(data.content || HANDOFF_FALLBACK_MESSAGE));
         setHandoffOpen(true);
+      } else if (data.content) {
+        setMessages(appendBotMessage(data.content));
       }
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), role: "bot", text: FRIENDLY_ERROR_FALLBACK },
-      ]);
+      setMessages(appendBotMessage(FRIENDLY_ERROR_FALLBACK));
     } finally {
       setIsSending(false);
+    }
+  }
+
+  async function submitHandoff(name: string, phone: string) {
+    setHandoffSubmitting(true);
+    setHandoffError(null);
+    try {
+      const res = await fetch("/api/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setHandoffError(data?.message ?? HANDOFF_SUBMIT_ERROR);
+        return;
+      }
+      setHandoffSubmitted(true);
+    } catch {
+      setHandoffError(HANDOFF_SUBMIT_ERROR);
+    } finally {
+      setHandoffSubmitting(false);
     }
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center px-[16px] py-[56px]">
       <div className="flex h-[820px] w-[430px] max-w-full flex-col overflow-hidden rounded-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card-elevation)]">
-        <div className="flex flex-shrink-0 items-center gap-[12px] border-b border-[var(--color-border-hairline)] px-[20px] py-[18px]">
-          <Link href="/" aria-label="Back to homepage" className="p-[4px] text-[20px] no-underline">
-            ←
-          </Link>
-          <div className="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-[var(--accent)] text-[14px] font-semibold text-[var(--color-accent-on-color)]">
-            {initialsOf(salon.salonName)}
-          </div>
-          <div className="flex-1">
-            <div className="text-[15px] leading-[1.2] font-semibold">
-              {salon.salonName} Assistant
-            </div>
-            <div className="text-[12px] leading-[1.2] text-[var(--color-status-online)]">
-              ● Online now
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-1 flex-col gap-[12px] overflow-y-auto px-[18px] pt-[18px] pb-[12px]">
+        <ChatThread salonName={salon.salonName} scrollAnchorRef={threadEndRef}>
           {messages.map((m) => (
             <MessageBubble key={m.id} role={m.role}>
               {m.text}
@@ -172,15 +183,16 @@ export default function ChatPage() {
             />
           ) : null}
 
-          <HandoffSection
-            open={handoffOpen}
-            onOpen={() => setHandoffOpen(true)}
-            submitted={handoffSubmitted}
-            onSubmit={() => setHandoffSubmitted(true)}
-          />
-
-          <div ref={threadEndRef} />
-        </div>
+          <HandoffPrompt onOpen={() => setHandoffOpen(true)} />
+          {handoffOpen ? (
+            <HandoffForm
+              submitted={handoffSubmitted}
+              submitting={handoffSubmitting}
+              error={handoffError}
+              onSubmit={submitHandoff}
+            />
+          ) : null}
+        </ChatThread>
 
         <MessageInputBar
           placeholder={`Message ${salon.salonName}…`}

@@ -40,3 +40,36 @@ describe("sendBookingTelegram", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
+
+describe("sendCallbackRequestTelegram", () => {
+  const callback = { name: "Sam Rivera", phone: "07999 111222" };
+
+  it("posts the callback request details to the Telegram Bot API", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { sendCallbackRequestTelegram } = await import("./telegram");
+    await sendCallbackRequestTelegram(callback);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, options] = fetchMock.mock.calls[0];
+    expect(url).toBe("https://api.telegram.org/bottest-token/sendMessage");
+    const body = JSON.parse(options.body);
+    expect(body.chat_id).toBe("12345");
+    expect(body.text).toContain("Sam Rivera");
+    expect(body.text).toContain("07999 111222");
+  });
+
+  it("does nothing when Telegram is not configured", async () => {
+    vi.stubEnv("TELEGRAM_BOT_TOKEN", "");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { sendCallbackRequestTelegram } = await import("./telegram");
+    await sendCallbackRequestTelegram(callback);
+
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
