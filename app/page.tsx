@@ -19,17 +19,17 @@ export default function Home() {
   const [chatOpen, setChatOpen] = useState(false);
   const [widgetOpen, setWidgetOpen] = useState(false);
 
-  function toggleChat(open?: boolean) {
+  /** Desktop (lg, 1024px) uses the floating widget; below that, the preview sheet. */
+  function setChatVisible(update: (open: boolean) => boolean) {
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-    const setOpen = isDesktop ? setWidgetOpen : setChatOpen;
-    setOpen((v) => open ?? !v);
+    (isDesktop ? setWidgetOpen : setChatOpen)(update);
   }
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-[64px] px-[16px] py-[56px] lg:gap-0 lg:bg-[var(--color-bg-surface)] lg:p-0">
       <div className="relative w-[430px] max-w-full overflow-hidden rounded-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card-elevation)] lg:w-[1200px] lg:overflow-visible lg:rounded-none lg:bg-transparent lg:shadow-none">
         <Header salon={salon} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} />
-        <Hero salon={salon} onOpenChat={() => toggleChat(true)} />
+        <Hero salon={salon} onOpenChat={() => setChatVisible(() => true)} />
         <TrustLine />
         <TrustIndicators salon={salon} />
         <ServicesGrid salon={salon} />
@@ -40,7 +40,7 @@ export default function Home() {
           {salon.salonName} · {salon.area}
         </footer>
 
-        <ChatFAB onClick={() => toggleChat()} />
+        <ChatFAB onClick={() => setChatVisible((open) => !open)} />
         <DesktopChatWidget open={widgetOpen} onClose={() => setWidgetOpen(false)} />
         <ChatPreviewSheet salon={salon} open={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
