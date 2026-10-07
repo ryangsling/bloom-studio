@@ -9,8 +9,8 @@ export interface HeroProps {
 
 export function Hero({ salon, onOpenChat }: HeroProps) {
   return (
-    <>
-      <div className="relative h-[340px] bg-[var(--color-bg-image-placeholder)]">
+    <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-[48px] lg:px-[22px] lg:py-[32px]">
+      <div className="relative h-[340px] bg-[var(--color-bg-image-placeholder)] lg:order-2 lg:h-[480px] lg:overflow-hidden lg:rounded-[var(--radius-panel)]">
         <ImageSlot
           src={salon.heroImage.src}
           alt={salon.heroImage.alt}
@@ -21,8 +21,8 @@ export function Hero({ salon, onOpenChat }: HeroProps) {
         />
       </div>
 
-      <div className="px-[22px] pt-[28px] pb-[8px]">
-        <h1 className="m-0 mb-[12px] font-[family-name:var(--font-display)] text-[32px] leading-[1.15] font-medium italic">
+      <div className="px-[22px] pt-[28px] pb-[8px] lg:p-0">
+        <h1 className="m-0 mb-[12px] font-[family-name:var(--font-display)] text-[32px] leading-[1.15] font-medium italic lg:text-[44px]">
           {salon.salonName} — {salon.area}&rsquo;s hair &amp; beauty studio
         </h1>
         <p className="m-0 mb-[22px] text-[15px] leading-[1.6] text-[var(--color-text-secondary)]">
@@ -47,7 +47,7 @@ export function Hero({ salon, onOpenChat }: HeroProps) {
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
