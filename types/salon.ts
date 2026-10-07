@@ -25,8 +25,6 @@ export interface HoursRow {
 
 export interface ChatDemoConfig {
   stylist: string;
-  slot1: string;
-  slot2: string;
   nextAvailable: string;
 }
 

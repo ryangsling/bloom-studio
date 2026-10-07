@@ -19,7 +19,7 @@ function makeSalon(overrides: Partial<Salon> = {}): Salon {
     services: [{ name: "Balayage", price: "£150", duration: "2hr", image: BLANK_IMAGE }],
     reviews: [],
     hours: [{ day: "Monday", time: "9-5" }],
-    chat: { stylist: "Test", slot1: "", slot2: "", nextAvailable: "" },
+    chat: { stylist: "Test", nextAvailable: "" },
     ...overrides,
   };
 }

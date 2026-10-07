@@ -13,6 +13,7 @@ export interface HeaderProps {
   salon: Salon;
   menuOpen: boolean;
   onToggleMenu: () => void;
+  onBookNow: () => void;
 }
 
 function SalonBrand({ salon, fontSize }: { salon: Salon; fontSize: string }) {
@@ -28,7 +29,7 @@ function SalonBrand({ salon, fontSize }: { salon: Salon; fontSize: string }) {
   );
 }
 
-export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
+export function Header({ salon, menuOpen, onToggleMenu, onBookNow }: HeaderProps) {
   return (
     <>
       <div className="flex items-center justify-between px-[22px] pt-[20px] pb-[16px]">
@@ -46,7 +47,7 @@ export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
           <span className="text-[15px] font-medium text-[var(--color-text-secondary)]">
             {salon.phone}
           </span>
-          <Button variant="primary">
+          <Button variant="primary" onClick={onBookNow}>
             Book now
           </Button>
         </nav>
@@ -97,7 +98,9 @@ export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
             <div className="font-medium text-[15px] text-[var(--color-text-secondary)]">
               {salon.phone}
             </div>
-            <Button variant="primary">Book now</Button>
+            <Button variant="primary" onClick={onBookNow}>
+              Book now
+            </Button>
           </div>
         </div>
       ) : null}

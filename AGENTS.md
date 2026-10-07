@@ -44,7 +44,7 @@ Reference: design/DESIGN.md (full spec)
 - Type: Newsreader (italic, weight 500, for headings/salon name/prices) for display, Karla for body, buttons, nav, and chat
 - Signature element: the pulsing accent-colored ring on the availability dot and chat FAB (`motion.pulse_ring`)
 - Constraints: mobile-first (430px frame) with one added desktop breakpoint at `lg:`/1024px (1200px container, no tablet tier), no dark mode, every DESIGN.md token is final — implement, don't restyle
-- Motion: the slide-up sheet entrance (`translateY 100%→0`, .25s ease-out) is the one motion idea to reuse consistently across the nav overlay, chat preview sheet, and full chat screen
+- Motion: the slide-up sheet entrance (`translateY 100%→0`, .25s ease-out) is the one motion idea to reuse consistently across the nav overlay, desktop chat widget, and full chat screen
 
 ## Coding Standards
 

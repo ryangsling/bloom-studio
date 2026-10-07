@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import salon from "@/config/salon.json";
 import Header from "@/components/home/Header";
 import Hero from "@/components/home/Hero";
@@ -11,38 +12,56 @@ import AvailabilityStrip from "@/components/home/AvailabilityStrip";
 import ReviewsCarousel from "@/components/home/ReviewsCarousel";
 import FindUs from "@/components/home/FindUs";
 import ChatFAB from "@/components/home/ChatFAB";
-import ChatPreviewSheet from "@/components/home/ChatPreviewSheet";
 import DesktopChatWidget from "@/components/home/DesktopChatWidget";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false);
   const [widgetOpen, setWidgetOpen] = useState(false);
 
-  /** Desktop (lg, 1024px) uses the floating widget; below that, the preview sheet. */
-  function setChatVisible(update: (open: boolean) => boolean) {
-    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-    (isDesktop ? setWidgetOpen : setChatOpen)(update);
+  const router = useRouter();
+
+  /** Desktop (lg, 1024px) uses the floating widget; below that, the full chat page. */
+  function isDesktop() {
+    return window.matchMedia("(min-width: 1024px)").matches;
+  }
+
+  function openChat() {
+    if (isDesktop()) setWidgetOpen(true);
+    else router.push("/chat");
+  }
+
+  function toggleChat() {
+    if (isDesktop()) setWidgetOpen((v) => !v);
+    else router.push("/chat");
+  }
+
+  function bookNow() {
+    setMenuOpen(false);
+    openChat();
   }
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-[64px] px-[16px] py-[56px] lg:gap-0 lg:bg-[var(--color-bg-surface)] lg:p-0">
       <div className="relative w-[430px] max-w-full overflow-hidden rounded-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card-elevation)] lg:w-[1200px] lg:overflow-visible lg:rounded-none lg:bg-transparent lg:shadow-none">
-        <Header salon={salon} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} />
-        <Hero salon={salon} onOpenChat={() => setChatVisible(() => true)} />
+        <Header
+          salon={salon}
+          menuOpen={menuOpen}
+          onToggleMenu={() => setMenuOpen((v) => !v)}
+          onBookNow={bookNow}
+        />
+        <Hero salon={salon} onOpenChat={openChat} />
         <TrustLine />
         <TrustIndicators salon={salon} />
         <ServicesGrid salon={salon} />
-        <AvailabilityStrip salon={salon} />
+        <AvailabilityStrip salon={salon} onBook={openChat} />
         <ReviewsCarousel salon={salon} />
         <FindUs salon={salon} />
         <footer className="border-t border-[var(--color-border-hairline)] px-[22px] py-[22px] text-[12px] text-[var(--color-text-faint)]">
           {salon.salonName} · {salon.area}
         </footer>
 
-        <ChatFAB onClick={() => setChatVisible((open) => !open)} />
+        <ChatFAB onClick={toggleChat} />
         <DesktopChatWidget open={widgetOpen} onClose={() => setWidgetOpen(false)} />
-        <ChatPreviewSheet salon={salon} open={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
     </div>
   );
