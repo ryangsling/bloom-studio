@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import salon from "@/config/salon.json";
-import { getScriptedMessages } from "@/lib/scriptedConversation";
+import { getFaqs, getWelcomeMessage, type Faq } from "@/lib/faqs";
+import { googleCalendarUrl } from "@/lib/calendarLink";
 import ChatThread from "@/components/chat/ChatThread";
 import MessageBubble from "@/components/chat/MessageBubble";
 import TypingIndicator from "@/components/chat/TypingIndicator";
@@ -32,19 +33,20 @@ const HANDOFF_FALLBACK_MESSAGE =
 const HANDOFF_SUBMIT_ERROR = "Something went wrong sending that — please try again.";
 
 function seedMessages(): DisplayMessage[] {
-  const scripted = getScriptedMessages(salon.services[0]).map((m, i) => ({
-    id: `seed-${i}`,
-    role: m.role === "user" ? ("user" as const) : ("bot" as const),
-    text: m.text,
-  }));
+  return [{ id: "welcome", role: "bot", text: getWelcomeMessage(salon) }];
+}
 
-  const availabilityOffer: DisplayMessage = {
-    id: "seed-availability",
-    role: "bot",
-    text: `Let me check the diary… good news — I have ${salon.chat.slot1} and ${salon.chat.slot2} free this week. Which works better?`,
-  };
-
-  return [...scripted, availabilityOffer];
+function calendarUrlFor(booking: BookingInfo): string | null {
+  const service = salon.services.find(
+    (s) => s.name.toLowerCase() === booking.service.toLowerCase(),
+  );
+  return googleCalendarUrl({
+    title: `${booking.service} at ${salon.salonName} (requested)`,
+    time: booking.preferredTime,
+    duration: service?.duration ?? "",
+    location: `${salon.addressLine1}, ${salon.area} ${salon.postcode}`,
+    details: "Requested via the website. The salon will confirm this time by text or call.",
+  });
 }
 
 function appendBotMessage(text: string) {
@@ -69,6 +71,14 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
   const [handoffError, setHandoffError] = useState<string | null>(null);
   const threadEndRef = useRef<HTMLDivElement>(null);
 
+  function askFaq(faq: Faq) {
+    setMessages((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), role: "user", text: faq.question },
+      { id: crypto.randomUUID(), role: "bot", text: faq.answer },
+    ]);
+  }
+
   useEffect(() => {
     threadEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isSending]);
@@ -77,7 +87,11 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
     if (isSending) return;
 
     setShowChips(false);
-    const userMessage: DisplayMessage = { id: crypto.randomUUID(), role: "user", text };
+    const userMessage: DisplayMessage = {
+      id: crypto.randomUUID(),
+      role: "user",
+      text,
+    };
     const nextMessages = [...messages, userMessage];
     setMessages(nextMessages);
     setIsSending(true);
@@ -107,7 +121,10 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
           // always use our own fixed, accurate wording (see systemPrompt.ts
           // and BookingConfirmationCard for the full rationale).
           setMessages(appendBotMessage(CAPTURE_BOOKING_MESSAGE));
-          setBooking({ service: captured.service, preferredTime: captured.preferredTime });
+          setBooking({
+            service: captured.service,
+            preferredTime: captured.preferredTime,
+          });
         } else if (data.content) {
           setMessages(appendBotMessage(data.content));
         }
@@ -160,17 +177,13 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
         {showChips ? (
           <QuickReplyChips
             chips={[
+              ...getFaqs(salon).map((faq) => ({
+                label: faq.question,
+                onClick: () => askFaq(faq),
+              })),
               {
-                label: salon.chat.slot1,
-                onClick: () => sendMessage(`${salon.chat.slot1}, please`),
-              },
-              {
-                label: salon.chat.slot2,
-                onClick: () => sendMessage(`${salon.chat.slot2}, please`),
-              },
-              {
-                label: "See more times",
-                onClick: () => sendMessage("Can I see some other times?"),
+                label: "Book an appointment",
+                onClick: () => sendMessage("I'd like to book an appointment."),
               },
             ]}
           />
@@ -181,6 +194,7 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
             serviceName={booking.service}
             stylist={salon.chat.stylist}
             time={booking.preferredTime}
+            calendarUrl={calendarUrlFor(booking)}
             addressLine1={salon.addressLine1}
             area={salon.area}
           />

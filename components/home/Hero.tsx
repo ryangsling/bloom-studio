@@ -30,7 +30,7 @@ export function Hero({ salon, onOpenChat }: HeroProps) {
           day or night.
         </p>
         <div className="flex flex-wrap gap-[10px]">
-          <Button variant="primary" className="min-w-[140px] flex-1">
+          <Button variant="primary" onClick={onOpenChat} className="min-w-[140px] flex-1">
             Book now
           </Button>
           <Button
