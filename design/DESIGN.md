@@ -93,7 +93,7 @@ Locked visual reference extracted from the Claude Design prototype (`Bloom_Studi
 
 ## Screens in scope
 
-1. **Homepage** — hero, popular services grid, availability strip, reviews carousel, find-us/hours block, persistent chat FAB, slide-up chat preview sheet.
+1. **Homepage** — hero, popular services grid, availability strip, reviews carousel, find-us/hours block, persistent chat FAB, chat entry (full chat page on mobile, floating widget on desktop).
 2. **AI Receptionist Conversation** — full-screen chat thread, quick-reply chips, booking confirmation card, human-handoff form.
 
 Nothing beyond these two is specified here. Booking deposit flow, waitlist, owner dashboard, and rebooking automation are explicitly out of scope for this design system.
@@ -117,7 +117,7 @@ Added scope, design captured in `docs/superpowers/specs/2026-08-24-desktop-layou
 | Reviews | Horizontal scroll-snap carousel | Static 3-column grid, no scrolling |
 | Find us | Map placeholder stacked above address/hours | Two columns: map beside address/hours |
 | Footer | Small centered text line | Same content, wider |
-| Chat | `ChatFAB` → slide-up preview sheet → `/chat` full-page route | `ChatFAB` → persistent fixed bottom-right panel (~400×600px) overlaying the page in place, rendering the same chat UI as `/chat` (kept as a fallback route) |
+| Chat | `ChatFAB` → `/chat` full-page route (clean-slate welcome message + FAQ chips) | `ChatFAB` → persistent fixed bottom-right panel (~400×600px) overlaying the page in place, rendering the same chat UI as `/chat` (kept as a fallback route) |
 
 ## Component inventory
 
@@ -133,20 +133,19 @@ Added scope, design captured in `docs/superpowers/specs/2026-08-24-desktop-layou
 | `ReviewCard` | Horizontally scrollable, snap-aligned, star row + italic quote + name/service attribution |
 | `FindUs` | Map placeholder + address + hours table (day/time rows) |
 | `ChatFAB` | Fixed circular button, bottom-right, pulsing ring, opens the chat sheet |
-| `ChatPreviewSheet` | Slide-up panel (78% height) with a short message preview and a "Continue in full chat" CTA into Screen 2 |
 | `ChatThread` (Screen 2) | Full-screen header (back arrow, avatar initials, name, online status) + scrollable message list |
 | `MessageBubble` | Two variants: user (accent fill, right-aligned) and bot (surface fill, bordered, left-aligned) |
 | `TypingIndicator` | 3-dot bounce animation, bot-side bubble |
-| `QuickReplyChips` | Outlined pill buttons for slot selection, wraps to multiple rows |
-| `BookingConfirmationCard` | Appears after slot selection: service + stylist, time/address, "Add to calendar" CTA |
+| `QuickReplyChips` | Outlined pill buttons: the FAQ questions plus "Book an appointment", wraps to multiple rows |
+| `BookingConfirmationCard` | Appears after the booking request is captured: service + stylist, time/address, "Add to Google Calendar" link |
 | `HandoffPrompt` + `HandoffForm` | Underlined text link that reveals a name/phone capture form with a "Request a callback" CTA |
 | `MessageInputBar` | Disabled-looking text field placeholder + circular send button (footer, both screens conceptually share this pattern on Screen 2) |
 
 ## Interaction / state notes
 
-- Chat has two independent open states: a **preview sheet** on the homepage (contextual, partial height, teaser messages) and a **full conversation** on Screen 2 (navigated via anchor/route, not a modal). Both must exist, they are not the same component at different sizes.
+- Chat opens in one place per viewport: below `lg` the chat button, hero CTA and Book now buttons navigate to the full `/chat` page; at `lg` and up they open the floating widget. Both host the same `ChatPanel`, which starts as a clean slate: a welcome message plus FAQ chips answered locally from config. There is no homepage preview sheet.
 - `showHandoffForm` and `bookingSelected` are independent boolean states that reveal additional content inline, not separate screens.
-- Nav overlay, chat preview sheet, and chat full-screen all use the same slide/overlay visual language (scrim + rounded-top sheet or full-bleed overlay), keep this consistent if adding new overlays later.
+- Nav overlay, desktop chat widget, and chat full-screen all use the same slide/overlay visual language (scrim + rounded-top sheet or full-bleed overlay), keep this consistent if adding new overlays later.
 
 ## Content / data model
 
@@ -156,7 +155,7 @@ Every piece of salon-specific content is already externalized as named fields (s
 - **Services**: array of `{ name, price, duration }`, currently 4 items
 - **Reviews**: array of `{ quote, name, service }`, currently 3 items
 - **Hours**: array of `{ day, time }`, currently 4 rows (supports ranges like "Tue – Fri")
-- **AI assistant demo content**: `chatServiceName`, `chatServicePrice`, `chatStylist`, `slot1`, `slot2`, `nextAvailable` — these drive the scripted example conversation and must stay consistent with the `services` list (the demo currently hardcodes Balayage/Priya as the example, not a random service)
+- **AI assistant demo content**: `chatServiceName`, `chatServicePrice`, `chatStylist`, `nextAvailable` — these feed the FAQ answers and booking confirmation and must stay consistent with the `services` list
 
 ## Explicit non-goals for this design system
 

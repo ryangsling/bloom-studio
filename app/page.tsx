@@ -21,10 +21,23 @@ export default function Home() {
   const router = useRouter();
 
   /** Desktop (lg, 1024px) uses the floating widget; below that, the full chat page. */
-  function openChat(toggle = false) {
-    if (window.matchMedia("(min-width: 1024px)").matches)
-      setWidgetOpen((v) => (toggle ? !v : true));
+  function isDesktop() {
+    return window.matchMedia("(min-width: 1024px)").matches;
+  }
+
+  function openChat() {
+    if (isDesktop()) setWidgetOpen(true);
     else router.push("/chat");
+  }
+
+  function toggleChat() {
+    if (isDesktop()) setWidgetOpen((v) => !v);
+    else router.push("/chat");
+  }
+
+  function bookNow() {
+    setMenuOpen(false);
+    openChat();
   }
 
   return (
@@ -34,20 +47,20 @@ export default function Home() {
           salon={salon}
           menuOpen={menuOpen}
           onToggleMenu={() => setMenuOpen((v) => !v)}
-          onBookNow={() => openChat()}
+          onBookNow={bookNow}
         />
-        <Hero salon={salon} onOpenChat={() => openChat()} />
+        <Hero salon={salon} onOpenChat={openChat} />
         <TrustLine />
         <TrustIndicators salon={salon} />
         <ServicesGrid salon={salon} />
-        <AvailabilityStrip salon={salon} />
+        <AvailabilityStrip salon={salon} onBook={openChat} />
         <ReviewsCarousel salon={salon} />
         <FindUs salon={salon} />
         <footer className="border-t border-[var(--color-border-hairline)] px-[22px] py-[22px] text-[12px] text-[var(--color-text-faint)]">
           {salon.salonName} · {salon.area}
         </footer>
 
-        <ChatFAB onClick={() => openChat(true)} />
+        <ChatFAB onClick={toggleChat} />
         <DesktopChatWidget open={widgetOpen} onClose={() => setWidgetOpen(false)} />
       </div>
     </div>

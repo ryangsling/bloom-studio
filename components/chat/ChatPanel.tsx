@@ -36,7 +36,7 @@ function seedMessages(): DisplayMessage[] {
   return [{ id: "welcome", role: "bot", text: getWelcomeMessage(salon) }];
 }
 
-function calendarUrlFor(booking: BookingInfo): string | null {
+function calendarUrlFor(booking: BookingInfo): string {
   const service = salon.services.find(
     (s) => s.name.toLowerCase() === booking.service.toLowerCase(),
   );
@@ -87,11 +87,7 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
     if (isSending) return;
 
     setShowChips(false);
-    const userMessage: DisplayMessage = {
-      id: crypto.randomUUID(),
-      role: "user",
-      text,
-    };
+    const userMessage: DisplayMessage = { id: crypto.randomUUID(), role: "user", text };
     const nextMessages = [...messages, userMessage];
     setMessages(nextMessages);
     setIsSending(true);
@@ -121,10 +117,7 @@ export default function ChatPanel({ onClose }: ChatPanelProps) {
           // always use our own fixed, accurate wording (see systemPrompt.ts
           // and BookingConfirmationCard for the full rationale).
           setMessages(appendBotMessage(CAPTURE_BOOKING_MESSAGE));
-          setBooking({
-            service: captured.service,
-            preferredTime: captured.preferredTime,
-          });
+          setBooking({ service: captured.service, preferredTime: captured.preferredTime });
         } else if (data.content) {
           setMessages(appendBotMessage(data.content));
         }

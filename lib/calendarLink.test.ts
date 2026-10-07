@@ -22,6 +22,16 @@ describe("parseRequestedTime", () => {
   it("rolls a passed time on the same weekday to next week", () => {
     expect(parseRequestedTime("Wed 9am", NOW)!.getDate()).toBe(14);
   });
+  it("does not roll today to next week once the time has passed", () => {
+    expect(parseRequestedTime("today 9am", NOW)!.getDate()).toBe(7);
+  });
+  it("handles 12am and 12pm", () => {
+    expect(parseRequestedTime("tomorrow 12am", NOW)!.getHours()).toBe(0);
+    expect(parseRequestedTime("tomorrow 12pm", NOW)!.getHours()).toBe(12);
+  });
+  it("ignores words that merely start like a weekday", () => {
+    expect(parseRequestedTime("next month at 2pm", NOW)).toBeNull();
+  });
   it("handles today and tomorrow", () => {
     expect(parseRequestedTime("today 4:30pm", NOW)!.getDate()).toBe(7);
     expect(parseRequestedTime("tomorrow 4pm", NOW)!.getDate()).toBe(8);
@@ -48,7 +58,9 @@ describe("googleCalendarUrl", () => {
     expect(url.searchParams.get("text")).toBe(event.title);
   });
 
-  it("returns null when the time cannot be understood", () => {
-    expect(googleCalendarUrl({ ...event, time: "whenever" }, NOW)).toBeNull();
+  it("omits dates but keeps the requested wording when the time cannot be understood", () => {
+    const url = new URL(googleCalendarUrl({ ...event, time: "whenever" }, NOW));
+    expect(url.searchParams.has("dates")).toBe(false);
+    expect(url.searchParams.get("details")).toContain("whenever");
   });
 });

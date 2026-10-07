@@ -26,8 +26,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 - Hand-off is triggered by a structured `request_handoff` tool call (with a `reason` field), never by the model writing prose — mirrors `capture_booking`'s pattern of "structured action, not claimed text."
 - Rate limiting is an in-memory, single-instance counter (session cookie + IP) for phase 1, not an external Redis-backed store — documented tradeoff in AGENTS.md Limitations.
-- Chat is route-based for the full screen (`/chat`) and a separate overlay component for the homepage preview sheet — these are two distinct components per DESIGN.md's interaction notes, not one component at two sizes.
-- The scripted opening exchange in the full chat is generated from `config.services[0]` at render time, never hardcoded to Balayage/Priya, so the demo stays coherent when re-skinned.
+- Chat has no homepage preview sheet: below `lg` entry points navigate to `/chat`; at `lg` and up they open the floating widget. Both host the same `ChatPanel`.
+- A fresh chat is a clean slate: a welcome message plus FAQ chips whose answers are built from `config/salon.json` (`lib/faqs.ts`) and shown locally, with no AI call. "Add to Google Calendar" is a prefilled calendar template link (`lib/calendarLink.ts`), no OAuth.
 - Desktop (Parts 9–10) adds exactly one breakpoint (`lg:`/1024px, no tablet tier), drops the mobile "phone frame" metaphor for a standard full-width layout, and gives the AI concierge a persistent bottom-right widget on desktop instead of the mobile full-page `/chat` takeover — full rationale in `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-design.md`.
 
 ## Part 1 - Planning and project baseline (hard gate)
