@@ -19,8 +19,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** Parts 1–9 — the full mobile MVP and the desktop homepage layout (planning, scaffolding, design system, homepage, AI concierge backend + frontend, Vercel deployment live at https://bloom.incodet.com, end-to-end verification, PAUSE 3 notification delivery confirmed by user)
-- **Pending:** Part 10 (desktop AI concierge widget)
+- **Completed:** Parts 1–10 — the full mobile MVP, the desktop homepage layout, and the desktop chat widget (planning, scaffolding, design system, homepage, AI concierge backend + frontend, Vercel deployment live at https://bloom.incodet.com, end-to-end verification, PAUSE 3 notification delivery confirmed by user)
+- **Pending:** none
 
 ## Confirmed design decisions
 
@@ -283,7 +283,7 @@ Design rationale: `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-de
 
 ## Part 10 - Desktop AI concierge widget
 
-**Status:** Pending
+**Status:** Done
 
 ### Tasks
 
@@ -294,13 +294,13 @@ Design rationale: `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-de
 
 ### Tests
 
-- [ ] Manual E2E at a desktop viewport: open the widget, run the scripted opener, pick a quick-reply slot, confirm `BookingConfirmationCard` renders correctly inside the fixed panel
+- [x] Manual E2E at a desktop viewport: open the widget, run the scripted opener, pick a quick-reply slot, confirm `BookingConfirmationCard` renders correctly inside the fixed panel
 - [x] Manual E2E: confirm the widget calls the same `/api/chat` route as `/chat` (no backend duplication)
 - [x] Manual check: `/chat` still loads correctly as a standalone page on both mobile and desktop viewports
 
 ### Success criteria
 
-- [ ] The full mobile booking loop (chat → `capture_booking` → email/Telegram notifications) also completes correctly through the desktop widget
+- [x] The full mobile booking loop (chat → `capture_booking` → email/Telegram notifications) also completes correctly through the desktop widget
 - [x] Opening/closing the widget never navigates away from the homepage
 
 ### PAUSE Block Format
