@@ -12,7 +12,7 @@ export function ServicesGrid({ salon }: ServicesGridProps) {
       <div className="mb-[14px]">
         <SectionHeading>Popular services</SectionHeading>
       </div>
-      <div className="grid grid-cols-2 gap-[12px]">
+      <div className="grid grid-cols-2 gap-[12px] lg:grid-cols-4 lg:gap-[16px]">
         {salon.services.map((service) => (
           <ServiceCard key={service.name} service={service} />
         ))}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Button from "@/components/Button";
 import type { Salon } from "@/types/salon";
 
@@ -14,17 +15,45 @@ export interface HeaderProps {
   onToggleMenu: () => void;
 }
 
+function SalonBrand({ salon, fontSize }: { salon: Salon; fontSize: string }) {
+  return (
+    <div className="flex items-center gap-[8px]">
+      <Image src={salon.logo.src} alt={salon.logo.alt} width={26} height={26} />
+      <div
+        className={`font-[family-name:var(--font-display)] leading-none font-medium italic ${fontSize}`}
+      >
+        {salon.salonName}
+      </div>
+    </div>
+  );
+}
+
 export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
   return (
     <>
       <div className="flex items-center justify-between px-[22px] pt-[20px] pb-[16px]">
-        <div className="font-[family-name:var(--font-display)] text-[22px] leading-none font-medium italic">
-          {salon.salonName}
-        </div>
+        <SalonBrand salon={salon} fontSize="text-[22px]" />
+        <nav className="hidden items-center gap-[28px] lg:flex">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-[15px] text-[var(--color-text-secondary)] no-underline"
+            >
+              {link.label}
+            </a>
+          ))}
+          <span className="text-[15px] font-medium text-[var(--color-text-secondary)]">
+            {salon.phone}
+          </span>
+          <Button variant="primary">
+            Book now
+          </Button>
+        </nav>
         <button
           onClick={onToggleMenu}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
-          className="-m-[8px] flex cursor-pointer flex-col gap-[5px] border-none bg-transparent p-[8px]"
+          className="-m-[8px] flex cursor-pointer flex-col gap-[5px] border-none bg-transparent p-[8px] lg:hidden"
         >
           <span className="block h-[2px] w-[22px] bg-[var(--color-text-primary)]" />
           <span className="block h-[2px] w-[22px] bg-[var(--color-text-primary)]" />
@@ -32,11 +61,9 @@ export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
       </div>
 
       {menuOpen ? (
-        <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-[var(--color-bg-surface)] px-[22px] py-[20px]">
+        <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-[var(--color-bg-surface)] px-[22px] py-[20px] lg:hidden">
           <div className="mb-[36px] flex items-center justify-between">
-            <div className="font-[family-name:var(--font-display)] text-[22px] italic">
-              {salon.salonName}
-            </div>
+            <SalonBrand salon={salon} fontSize="text-[22px]" />
             <button
               onClick={onToggleMenu}
               aria-label="Close menu"
