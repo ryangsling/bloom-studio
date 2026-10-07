@@ -268,7 +268,7 @@ Design rationale: `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-de
 - [x] `ReviewsCarousel`: `lg:` static 3-column grid, remove scroll-snap behavior at that breakpoint
 - [x] `FindUs`: `lg:` two-column layout (map beside address/hours)
 - [x] Footer: widen within the `lg:` container, same content
-- [x] Add the shared `lg:` 1200px centered container with responsive horizontal padding, used by every section above
+- [x] Add the shared `lg:` 1200px centered container (fixed 22px section gutters; padding does not step up at wider viewports)
 
 ### Tests
 

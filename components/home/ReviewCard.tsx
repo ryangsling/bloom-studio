@@ -7,7 +7,7 @@ export interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <div className="w-[240px] flex-shrink-0 lg:w-auto rounded-[var(--radius-card)] border border-[var(--color-border-hairline)] bg-[var(--color-bg-surface)] p-[16px] [scroll-snap-align:start]">
+    <div className="w-[240px] flex-shrink-0 lg:w-auto rounded-[var(--radius-card)] border border-[var(--color-border-hairline)] bg-[var(--color-bg-surface)] p-[16px] [scroll-snap-align:start] lg:[scroll-snap-align:none]">
       <div className="mb-[8px]">
         <StarRating />
       </div>
