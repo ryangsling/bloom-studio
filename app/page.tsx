@@ -18,8 +18,8 @@ export default function Home() {
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen flex-col items-center gap-[64px] px-[16px] py-[56px]">
-      <div className="relative w-[430px] max-w-full overflow-hidden rounded-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card-elevation)]">
+    <div className="flex min-h-screen flex-col items-center gap-[64px] px-[16px] py-[56px] lg:gap-0 lg:bg-[var(--color-bg-surface)] lg:p-0">
+      <div className="relative w-[430px] max-w-full overflow-hidden rounded-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-card-elevation)] lg:w-[1200px] lg:overflow-visible lg:rounded-none lg:bg-transparent lg:shadow-none">
         <Header salon={salon} menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} />
         <Hero salon={salon} onOpenChat={() => setChatOpen(true)} />
         <TrustLine />

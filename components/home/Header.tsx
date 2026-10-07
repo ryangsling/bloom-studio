@@ -33,10 +33,27 @@ export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
     <>
       <div className="flex items-center justify-between px-[22px] pt-[20px] pb-[16px]">
         <SalonBrand salon={salon} fontSize="text-[22px]" />
+        <nav className="hidden items-center gap-[28px] lg:flex">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-[15px] text-[var(--color-text-secondary)] no-underline"
+            >
+              {link.label}
+            </a>
+          ))}
+          <span className="text-[15px] font-medium text-[var(--color-text-secondary)]">
+            {salon.phone}
+          </span>
+          <Button variant="primary">
+            Book now
+          </Button>
+        </nav>
         <button
           onClick={onToggleMenu}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
-          className="-m-[8px] flex cursor-pointer flex-col gap-[5px] border-none bg-transparent p-[8px]"
+          className="-m-[8px] flex cursor-pointer flex-col gap-[5px] border-none bg-transparent p-[8px] lg:hidden"
         >
           <span className="block h-[2px] w-[22px] bg-[var(--color-text-primary)]" />
           <span className="block h-[2px] w-[22px] bg-[var(--color-text-primary)]" />
@@ -44,7 +61,7 @@ export function Header({ salon, menuOpen, onToggleMenu }: HeaderProps) {
       </div>
 
       {menuOpen ? (
-        <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-[var(--color-bg-surface)] px-[22px] py-[20px]">
+        <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-[var(--color-bg-surface)] px-[22px] py-[20px] lg:hidden">
           <div className="mb-[36px] flex items-center justify-between">
             <SalonBrand salon={salon} fontSize="text-[22px]" />
             <button

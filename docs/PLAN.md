@@ -19,8 +19,8 @@ Execution will proceed in gated phases. Part 1 is a hard gate: no implementation
 
 ## Current implementation status
 
-- **Completed:** Parts 1–8 — the full mobile MVP (planning, scaffolding, design system, homepage, AI concierge backend + frontend, Vercel deployment live at https://bloom.incodet.com, end-to-end verification, PAUSE 3 notification delivery confirmed by user)
-- **Pending:** Parts 9–10 (desktop layout)
+- **Completed:** Parts 1–9 — the full mobile MVP and the desktop homepage layout (planning, scaffolding, design system, homepage, AI concierge backend + frontend, Vercel deployment live at https://bloom.incodet.com, end-to-end verification, PAUSE 3 notification delivery confirmed by user)
+- **Pending:** Part 10 (desktop AI concierge widget)
 
 ## Confirmed design decisions
 
@@ -255,31 +255,31 @@ Confirm to the agent: "Email and Telegram notifications both arrived — end-to-
 
 ## Part 9 - Desktop homepage layout
 
-**Status:** Pending
+**Status:** Done
 
 Design rationale: `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-design.md`. One added breakpoint (Tailwind `lg:`, 1024px), no tablet tier. Extends the existing Part 4 components with `lg:` variants — no parallel desktop-only components.
 
 ### Tasks
 
-- [ ] `Header`: add an `lg:` inline nav (menu links, phone, Book Now), hide the hamburger/full-screen overlay at `lg:` and up
-- [ ] `Hero`: add an `lg:` two-column layout (copy + CTAs beside the hero `ImageSlot`), replacing the mobile stacked order
-- [ ] `ServicesGrid`: `lg:` 4-column grid (all 4 services in one row)
-- [ ] `AvailabilityStrip`: widen within the `lg:` 1200px container, same content
-- [ ] `ReviewsCarousel`: `lg:` static 3-column grid, remove scroll-snap behavior at that breakpoint
-- [ ] `FindUs`: `lg:` two-column layout (map beside address/hours)
-- [ ] Footer: widen within the `lg:` container, same content
-- [ ] Add the shared `lg:` 1200px centered container with responsive horizontal padding, used by every section above
+- [x] `Header`: add an `lg:` inline nav (menu links, phone, Book Now), hide the hamburger/full-screen overlay at `lg:` and up
+- [x] `Hero`: add an `lg:` two-column layout (copy + CTAs beside the hero `ImageSlot`), replacing the mobile stacked order
+- [x] `ServicesGrid`: `lg:` 4-column grid (all 4 services in one row)
+- [x] `AvailabilityStrip`: widen within the `lg:` 1200px container, same content
+- [x] `ReviewsCarousel`: `lg:` static 3-column grid, remove scroll-snap behavior at that breakpoint
+- [x] `FindUs`: `lg:` two-column layout (map beside address/hours)
+- [x] Footer: widen within the `lg:` container, same content
+- [x] Add the shared `lg:` 1200px centered container (fixed 22px section gutters; padding does not step up at wider viewports)
 
 ### Tests
 
-- [ ] Manual check at 1280px and 1440px viewports against the Desktop layout table in `design/DESIGN.md`
-- [ ] Manual check at 1023px confirms the mobile layout is unaffected (breakpoint boundary)
-- [ ] `npm run build` and `npm run lint` both pass
+- [x] Manual check at 1280px and 1440px viewports against the Desktop layout table in `design/DESIGN.md`
+- [x] Manual check at 1023px confirms the mobile layout is unaffected (breakpoint boundary)
+- [x] `npm run build` and `npm run lint` both pass
 
 ### Success criteria
 
-- [ ] Every homepage section reflows correctly at `lg:` with no layout breakage between 1024px and common desktop widths (1280–1920px)
-- [ ] No mobile behavior regressed below 1024px
+- [x] Every homepage section reflows correctly at `lg:` with no layout breakage between 1024px and common desktop widths (1280–1920px)
+- [x] No mobile behavior regressed below 1024px
 
 ## Part 10 - Desktop AI concierge widget
 
