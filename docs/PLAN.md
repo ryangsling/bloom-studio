@@ -287,21 +287,21 @@ Design rationale: `docs/superpowers/specs/2026-08-24-desktop-layout-expansion-de
 
 ### Tasks
 
-- [ ] `DesktopChatWidget` component: fixed bottom-right panel (~400px wide, ~600px tall), rendered only at `lg:` and up
-- [ ] `ChatFAB` click behavior branches by viewport: below `lg:` unchanged (mobile preview sheet / `/chat`); at `lg:` and up, toggles `DesktopChatWidget` open/closed in place
-- [ ] Reuse Part 6's `ChatThread`, `MessageBubble`, `QuickReplyChips`, `BookingConfirmationCard`, and `HandoffForm` inside the widget — remove any full-viewport-only sizing assumption (e.g. `100vh`) from those components so they drop into the fixed panel cleanly
-- [ ] `/chat` route remains as a plain fallback page, unchanged
+- [x] `DesktopChatWidget` component: fixed bottom-right panel (~400px wide, ~600px tall), rendered only at `lg:` and up
+- [x] `ChatFAB` click behavior branches by viewport: below `lg:` unchanged (mobile preview sheet / `/chat`); at `lg:` and up, toggles `DesktopChatWidget` open/closed in place
+- [x] Reuse Part 6's `ChatThread`, `MessageBubble`, `QuickReplyChips`, `BookingConfirmationCard`, and `HandoffForm` inside the widget — remove any full-viewport-only sizing assumption (e.g. `100vh`) from those components so they drop into the fixed panel cleanly
+- [x] `/chat` route remains as a plain fallback page, unchanged
 
 ### Tests
 
 - [ ] Manual E2E at a desktop viewport: open the widget, run the scripted opener, pick a quick-reply slot, confirm `BookingConfirmationCard` renders correctly inside the fixed panel
-- [ ] Manual E2E: confirm the widget calls the same `/api/chat` route as `/chat` (no backend duplication)
-- [ ] Manual check: `/chat` still loads correctly as a standalone page on both mobile and desktop viewports
+- [x] Manual E2E: confirm the widget calls the same `/api/chat` route as `/chat` (no backend duplication)
+- [x] Manual check: `/chat` still loads correctly as a standalone page on both mobile and desktop viewports
 
 ### Success criteria
 
 - [ ] The full mobile booking loop (chat → `capture_booking` → email/Telegram notifications) also completes correctly through the desktop widget
-- [ ] Opening/closing the widget never navigates away from the homepage
+- [x] Opening/closing the widget never navigates away from the homepage
 
 ### PAUSE Block Format
 copy-paste this pattern whenever a part needs a manual step:

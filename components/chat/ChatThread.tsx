@@ -6,15 +6,26 @@ export interface ChatThreadProps {
   salonName: string;
   children: ReactNode;
   scrollAnchorRef: RefObject<HTMLDivElement | null>;
+  onClose?: () => void;
 }
 
-export function ChatThread({ salonName, children, scrollAnchorRef }: ChatThreadProps) {
+export function ChatThread({ salonName, children, scrollAnchorRef, onClose }: ChatThreadProps) {
   return (
     <>
       <div className="flex flex-shrink-0 items-center gap-[12px] border-b border-[var(--color-border-hairline)] px-[20px] py-[18px]">
-        <Link href="/" aria-label="Back to homepage" className="p-[4px] text-[20px] no-underline">
-          ←
-        </Link>
+        {onClose ? (
+          <button
+            onClick={onClose}
+            aria-label="Close chat"
+            className="cursor-pointer border-none bg-transparent p-[4px] text-[20px] leading-none"
+          >
+            &times;
+          </button>
+        ) : (
+          <Link href="/" aria-label="Back to homepage" className="p-[4px] text-[20px] no-underline">
+            ←
+          </Link>
+        )}
         <div className="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-[var(--accent)] text-[14px] font-semibold text-[var(--color-accent-on-color)]">
           {initialsOf(salonName)}
         </div>
