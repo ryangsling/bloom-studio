@@ -16,11 +16,11 @@ export function ChatPreviewSheet({ salon, open, onClose }: ChatPreviewSheetProps
   return (
     <>
       <div
-        className="fixed inset-0 z-[45] bg-[var(--color-overlay-scrim)]"
+        className="fixed inset-0 z-[45] bg-[var(--color-overlay-scrim)] lg:hidden"
         onClick={onClose}
       />
       <div
-        className="fixed inset-x-0 bottom-0 z-[46] flex h-[78vh] flex-col rounded-t-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-chat-panel)]"
+        className="fixed inset-x-0 bottom-0 z-[46] flex h-[78vh] flex-col lg:hidden rounded-t-[var(--radius-panel)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-chat-panel)]"
         style={{ animation: "slide-up 0.25s ease-out" }}
       >
         <div className="flex items-center gap-[10px] border-b border-[var(--color-border-hairline)] px-[20px] py-[16px]">
